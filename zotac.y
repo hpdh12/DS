@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "AST.h"
+extern int yydebug;
+yydebug=1;
 %}
 
 %union {
@@ -36,8 +38,8 @@
 
 %token <intnum> INTNUM <floatnum> FLOATNUM <id> ID
 %token <id> INT <id> FLOAT
-%token <id> FOR <id> WHILE <id> DO <id> IF <id> ELSE
-%token <id> RELA <id> EQLT
+%token <id> FOR <id> WHILE <id> IF <id> ELSE
+%token <id> DO
 %token <id> RETURN
 %token <id> UNARY
 
@@ -270,7 +272,7 @@ ASSIGN ';' STMT {
 	$$ = stmt;
 }
 |
-ASSIGN ';' {
+ASSIGN ';'{
 	struct STMT *stmt = (struct STMT *) malloc (sizeof (struct STMT));
 	stmt->s = eAssign;
 	stmt->stmt.assign_ = $1;
@@ -366,6 +368,12 @@ COMPOUNDSTMT {
 	stmt->stmt.cstmt_ = $1;
 	$$ = stmt;
 }
+|
+';' {
+	struct STMT *stmt = (struct STMT *) malloc (sizeof (struct STMT));
+	stmt->s = eSemi;
+	$$ = stmt;
+}
 ;
 ASSIGN : 
 ID '[' EXPR ']' '=' EXPR {
@@ -411,21 +419,20 @@ EXPR {
 	$$=ar;
 }
 ;
-
-WHILE_S : 
+WHILE_S :
+DO COMPOUNDSTMT WHILE '(' EXPR ')' ';' {
+	struct WHILE_S *wh_s = (struct WHILE_S *) malloc (sizeof (struct WHILE_S));
+	wh_s->do_while = true;
+	wh_s->cond = $5;
+	wh_s->stmt = $2;
+	$$=wh_s;
+}
+|
 WHILE '(' EXPR ')' STMT {
 	struct WHILE_S *wh_s = (struct WHILE_S *) malloc (sizeof (struct WHILE_S));
 	wh_s->do_while = false;
 	wh_s->cond = $3;
 	wh_s->stmt = $5;
-	$$=wh_s;
-}
-|
-DO STMT WHILE '(' EXPR ')' ';'{
-	struct WHILE_S *wh_s = (struct WHILE_S *) malloc (sizeof (struct WHILE_S));
-	wh_s->do_while = true;
-	wh_s->cond = $5;
-	wh_s->stmt = $2;
 	$$=wh_s;
 }
 ;
@@ -455,7 +462,6 @@ IF '(' EXPR ')' STMT {
 	$$ = i_s;
 }
 ;
-
 EXPR : 
 UNOP {
 	struct EXPR *exp = (struct EXPR *) malloc (sizeof (struct EXPR));
