@@ -1,6 +1,6 @@
 all:
-	lex miniC.l
-	bison -d  miniC.y
-	gcc lex.yy.c miniC.tab.c main.c -o miniC -lfl -g
+	lex zotac.l
+	bison -d zotac.y
+	gcc lex.yy.c zotac.tab.c main.c -o zotac -lfl -g
 clean:
-	rm -rf lex.yy.c miniC.tab.c miniC.tab.h miniC 
+	rm -rf lex.yy.c zotac.tab.c zotac.tab.h zotac 
