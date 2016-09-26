@@ -1,0 +1,32 @@
+int main(){
+	int a;
+	int b;
+	int c;
+	int d;
+	int e;
+	int f;
+	int g;
+	int g23jh1v23k1vjk3;
+
+	c= a+b;
+	d= a-b;
+	e= a*b;
+	f= a/b;
+	
+	for(a=0; a<1; a=a+1){
+		int b1;
+		int c1;
+
+		c1=1;
+		for(b=0;b<1;b=b+1){
+			c = 1+2;
+		}
+	}
+	while(a){
+		a = a+1;
+	}
+	do{
+		b = b + 1;
+	}while(b);
+
+}

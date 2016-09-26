@@ -1,0 +1,4 @@
+make clean
+git add .
+git commit -m $profile 
+git push -u origin master
